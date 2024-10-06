@@ -1,31 +1,15 @@
 <template>
   <div class="flex flex-col items-center gap-8">
-    <audio
-      v-if="state.audio"
-      :src="state.audio"
-      type="audio/ogg; codecs=opus"
-      controls
-    />
+    <audio v-if="state.audio" :src="state.audio" controls />
 
     <div>
       <UButton
-        v-if="!isRecording"
-        icon="i-heroicons-microphone-solid"
+        :icon="btnAttribs.icon"
+        :class="btnAttribs.class"
+        :aria-label="btnAttribs.label"
         color="gray"
-        class="rounded-full"
         size="xl"
-        aria-label="Microphone"
-        @click="startRecording"
-      />
-
-      <UButton
-        v-else
-        icon="i-heroicons-stop-solid"
-        color="gray"
-        class="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-500 rounded-full"
-        size="xl"
-        aria-label="Stop Recording"
-        @click="stopRecording"
+        @click="btnAttribs.action"
       />
     </div>
   </div>
@@ -42,6 +26,25 @@ const state = reactive<{
   mediaRecorder: null,
   audioChunks: [],
   audio: null,
+});
+
+const btnAttribs = computed(() => {
+  if (isRecording.value) {
+    return {
+      icon: 'i-heroicons-stop-16-solid',
+      label: 'Stop Recording',
+      class:
+        'text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-500 rounded-full',
+      action: stopRecording,
+    };
+  } else {
+    return {
+      icon: 'i-heroicons-microphone-16-solid',
+      label: 'Start Recording',
+      class: 'rounded-full',
+      action: startRecording,
+    };
+  }
 });
 
 const startRecording = async () => {
@@ -69,13 +72,12 @@ const startRecording = async () => {
 const stopRecording = (): void => {
   if (state.mediaRecorder) {
     state.mediaRecorder.stop();
+    state.mediaRecorder.stream.getTracks().forEach((track) => track.stop());
     isRecording.value = false;
 
-    state.audio = URL.createObjectURL(
-      new Blob(state.audioChunks, {
-        type: 'audio/ogg; codecs=opus',
-      })
-    );
+    const blob = new Blob(state.audioChunks);
+
+    state.audio = URL.createObjectURL(blob);
   }
 };
 </script>
