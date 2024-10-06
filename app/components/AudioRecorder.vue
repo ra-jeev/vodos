@@ -77,7 +77,24 @@ const stopRecording = (): void => {
 
     const blob = new Blob(state.audioChunks);
 
+    sendAudio(blob);
+
     state.audio = URL.createObjectURL(blob);
+  }
+};
+
+const sendAudio = async (blob: Blob) => {
+  const formData = new FormData();
+  formData.append('audioData', blob, 'recorded_audio.webm');
+  try {
+    const res = await $fetch('/api/transcribe', {
+      method: 'POST',
+      body: formData,
+    });
+
+    console.log('res', res);
+  } catch (error) {
+    console.error('Error sending audio to server:', error);
   }
 };
 </script>
