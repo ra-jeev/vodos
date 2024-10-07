@@ -12,6 +12,10 @@
         @click="btnAttribs.action"
       />
     </div>
+
+    <div v-if="transcription" class="text-center">
+      {{ transcription }}
+    </div>
   </div>
 </template>
 
@@ -83,6 +87,7 @@ const stopRecording = (): void => {
   }
 };
 
+const transcription = ref<string | undefined>();
 const sendAudio = async (blob: Blob) => {
   const formData = new FormData();
   formData.append('audioData', blob, 'recorded_audio.webm');
@@ -93,6 +98,9 @@ const sendAudio = async (blob: Blob) => {
     });
 
     console.log('res', res);
+    if (res.success) {
+      transcription.value = res.response?.text;
+    }
   } catch (error) {
     console.error('Error sending audio to server:', error);
   }
