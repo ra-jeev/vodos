@@ -6,7 +6,10 @@ export default defineNuxtConfig({
 
   modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/ui'],
 
-  hub: {},
+  hub: {
+    ai: true,
+    database: true,
+  },
 
   runtimeConfig: {
     public: {},
