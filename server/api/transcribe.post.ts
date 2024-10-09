@@ -1,11 +1,5 @@
 export default defineEventHandler(async (event) => {
-  console.log('incoming transcribe request', event.headers);
-
   const formData = await readMultipartFormData(event);
-  console.log(
-    'incoming transcribe request with multipart length: ',
-    formData?.length
-  );
 
   if (formData?.length) {
     const fileData = formData[0];
@@ -16,12 +10,11 @@ export default defineEventHandler(async (event) => {
     };
 
     const response = await hubAI().run('@cf/openai/whisper-tiny-en', input);
+
+    console.dir(response, { depth: null });
     // const response = await hubAI().run('@cf/openai/whisper', input);
 
-    return {
-      success: true,
-      response,
-    };
+    return handleUserRequest(response.text as string);
   }
 
   return {
