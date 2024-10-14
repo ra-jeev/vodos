@@ -4,7 +4,7 @@ export default defineNuxtConfig({
 
   future: { compatibilityVersion: 4 },
 
-  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/ui'],
+  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/ui', 'nuxt-auth-utils'],
 
   hub: {
     ai: true,
