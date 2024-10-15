@@ -13,13 +13,15 @@
   },
   "dependencies": {
     "@cloudflare/ai-utils": "^1.0.1",
+    "@iconify-json/simple-icons": "^1.2.8",
     "@nuxt/eslint": "^0.6.0",
     "@nuxt/ui": "^2.18.7",
     "@nuxthub/core": "^0.7.31",
     "nuxt": "^3.13.2",
     "nuxt-auth-utils": "^0.4.4",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.6.0",

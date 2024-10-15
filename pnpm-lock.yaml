@@ -11,6 +11,9 @@ importers:
       '@cloudflare/ai-utils':
         specifier: ^1.0.1
         version: 1.0.1
+      '@iconify-json/simple-icons':
+        specifier: ^1.2.8
+        version: 1.2.8
       '@nuxt/eslint':
         specifier: ^0.6.0
         version: 0.6.0(eslint@9.12.0(jiti@2.3.3))(magicast@0.3.5)(rollup@4.24.0)(typescript@5.6.3)(vite@5.4.9(@types/node@22.7.5)(terser@5.34.1))
@@ -32,6 +35,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.4.5(vue@3.5.12(typescript@5.6.3))
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@nuxt/eslint-config':
         specifier: ^0.6.0
@@ -939,6 +945,9 @@ packages:
 
   '@iconify-json/heroicons@1.2.1':
     resolution: {integrity: sha512-TkKfS5U27kE5MXmSGLzPoz95BP5VA9xEJXwJFwmPMVLX+xyWq0OkoiWTUXB0uAoQODpb8BaRpzSydItrq9fIRA==}
+
+  '@iconify-json/simple-icons@1.2.8':
+    resolution: {integrity: sha512-AzBpj2XAcWQbiy3i0rLq6lFw0pLT8lc/ptdsBc97N8KFKyXW4d62EK/EhAd82Ld0WsO+1exOvnfeIiX2FPsdzw==}
 
   '@iconify/collections@1.0.471':
     resolution: {integrity: sha512-R1rjlg4ym/9vvJ9Fg9iNfdDpb9BRkMy8950MV/D9SssbOKFR+JW1fcm7h4D6RtipWbHAJRkuJOww2pWfN85cCA==}
@@ -5449,6 +5458,10 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@iconify-json/heroicons@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/simple-icons@1.2.8':
     dependencies:
       '@iconify/types': 2.0.0
 
