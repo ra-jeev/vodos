@@ -14,7 +14,7 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
   ],
   bodyAttrs: {
-    class: 'bg-white dark:bg-gray-900',
+    class: 'bg-white dark:bg-gray-950',
   },
 });
 </script>

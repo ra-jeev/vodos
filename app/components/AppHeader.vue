@@ -19,7 +19,7 @@
 
         <UButton
           v-else
-          icon="i-heroicons-arrow-right-end-on-rectangle"
+          trailing-icon="i-heroicons-arrow-right-end-on-rectangle"
           to="/sign-in"
         >
           Sign In

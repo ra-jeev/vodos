@@ -123,7 +123,7 @@ const onSignUp = async (event: FormSubmitEvent<SignUpSchema>) => {
   } catch (error) {
     console.error('signup error', error);
     if (error instanceof FetchError) {
-      if (error.data?.statusCode === 400) {
+      if (error.data?.statusCode === 400 && error.data.data?.issues) {
         form.value?.setErrors(
           error.data.data.issues.map(
             (err: { message: string; path: string[] }) => ({
