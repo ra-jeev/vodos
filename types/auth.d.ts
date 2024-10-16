@@ -1,10 +1,9 @@
 declare module '#auth-utils' {
-  type User = {
-    id: number;
+  interface User {
     name: string;
     username: string;
-    createdAt: string;
-  };
+    avatar?: string;
+  }
 }
 
 export {};
