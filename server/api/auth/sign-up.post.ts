@@ -6,8 +6,6 @@ export default defineEventHandler(async (event) => {
     signUpSchema.parse
   );
 
-  console.log({ name, username, password });
-
   const hashedPassword = await hashPassword(password);
 
   try {
