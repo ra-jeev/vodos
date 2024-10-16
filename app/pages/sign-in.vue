@@ -3,7 +3,8 @@
     <h2 class="text-2xl font-medium text-center">Sign in to your account</h2>
 
     <UForm
-      :schema="schema"
+      ref="form"
+      :schema="authSchema"
       :state="state"
       class="space-y-4 my-6"
       @submit="onSignIn"
@@ -78,19 +79,15 @@
 </template>
 
 <script setup lang="ts">
-import { z } from 'zod';
-import type { FormSubmitEvent } from '#ui/types';
+import { FetchError } from 'ofetch';
+import { authSchema } from '~~/types';
+import type { Form, FormSubmitEvent } from '#ui/types';
+import type { AuthSchema } from '~~/types';
 
 const showPassword = ref(false);
 const loading = ref(false);
 const formError = ref('');
-
-const schema = z.object({
-  username: z.string().min(2, 'Must be at least 2 characters'),
-  password: z.string().min(8, 'Must be at least 8 characters'),
-});
-
-type Schema = z.output<typeof schema>;
+const form = useTemplateRef<Form<AuthSchema>>('form');
 
 const state = reactive({
   username: undefined,
@@ -98,8 +95,9 @@ const state = reactive({
 });
 
 const { fetch: refreshSession } = useUserSession();
-const onSignIn = async (event: FormSubmitEvent<Schema>) => {
+const onSignIn = async (event: FormSubmitEvent<AuthSchema>) => {
   loading.value = true;
+  form.value?.clear();
   formError.value = '';
 
   try {
@@ -113,9 +111,25 @@ const onSignIn = async (event: FormSubmitEvent<Schema>) => {
 
     await refreshSession();
   } catch (error) {
-    formError.value =
-      (error as { data?: { statusMessage?: string } }).data?.statusMessage ??
-      'Failed to sign in. Please try again later.';
+    console.error('sign-in error', error);
+    if (error instanceof FetchError) {
+      if (error.data?.statusCode === 400 && error.data.data?.issues) {
+        form.value?.setErrors(
+          error.data.data.issues.map(
+            (err: { message: string; path: string[] }) => ({
+              message: err.message,
+              path: err.path[0],
+            })
+          )
+        );
+      } else {
+        formError.value =
+          error.data?.statusMessage ??
+          'Failed to sign in. Please try again later.';
+      }
+    } else {
+      formError.value = 'Failed to sign in. Please try again later.';
+    }
   } finally {
     loading.value = false;
   }
