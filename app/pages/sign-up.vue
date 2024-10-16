@@ -3,7 +3,8 @@
     <h2 class="text-2xl font-medium text-center">Create a new account</h2>
 
     <UForm
-      :schema="schema"
+      ref="form"
+      :schema="signUpSchema"
       :state="state"
       class="space-y-4 my-6"
       @submit="onSignUp"
@@ -86,20 +87,15 @@
 </template>
 
 <script setup lang="ts">
-import { z } from 'zod';
-import type { FormSubmitEvent } from '#ui/types';
+import { FetchError } from 'ofetch';
+import { signUpSchema } from '~~/types';
+import type { Form, FormSubmitEvent } from '#ui/types';
+import type { SignUpSchema } from '~~/types';
 
 const showPassword = ref(false);
 const loading = ref(false);
 const formError = ref('');
-
-const schema = z.object({
-  name: z.string().min(2, 'Must be at least 2 characters'),
-  username: z.string().min(2, 'Must be at least 2 characters'),
-  password: z.string().min(8, 'Must be at least 8 characters'),
-});
-
-type Schema = z.output<typeof schema>;
+const form = useTemplateRef<Form<SignUpSchema>>('form');
 
 const state = reactive({
   name: undefined,
@@ -108,8 +104,9 @@ const state = reactive({
 });
 
 const { fetch: refreshSession } = useUserSession();
-const onSignUp = async (event: FormSubmitEvent<Schema>) => {
+const onSignUp = async (event: FormSubmitEvent<SignUpSchema>) => {
   loading.value = true;
+  form.value?.clear();
   formError.value = '';
 
   try {
@@ -124,9 +121,25 @@ const onSignUp = async (event: FormSubmitEvent<Schema>) => {
 
     await refreshSession();
   } catch (error) {
-    formError.value =
-      (error as { data?: { statusMessage?: string } }).data?.statusMessage ??
-      'Failed to sign up. Please try again later.';
+    console.error('signup error', error);
+    if (error instanceof FetchError) {
+      if (error.data?.statusCode === 400) {
+        form.value?.setErrors(
+          error.data.data.issues.map(
+            (err: { message: string; path: string[] }) => ({
+              message: err.message,
+              path: err.path[0],
+            })
+          )
+        );
+      } else {
+        formError.value =
+          error.data?.statusMessage ??
+          'Failed to sign up. Please try again later.';
+      }
+    } else {
+      formError.value = 'Failed to sign up. Please try again later.';
+    }
   } finally {
     loading.value = false;
   }
