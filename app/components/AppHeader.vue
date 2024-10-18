@@ -11,7 +11,7 @@
           icon="i-simple-icons-github"
           color="gray"
           variant="ghost"
-          to="https://github.com/ra-jeev/voidos"
+          to="https://github.com/ra-jeev/vodos"
           target="_blank"
         />
 

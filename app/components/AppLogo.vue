@@ -17,7 +17,7 @@
         <path d="m3 17l2 2l4-4m4-9h8m-8 6h8m-8 6h8" />
       </g>
     </svg>
-    <span class="font-bold" :class="textSize">VoiDos</span>
+    <span class="font-bold" :class="textSize">VoDos</span>
   </ULink>
 </template>
 
