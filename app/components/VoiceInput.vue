@@ -1,7 +1,8 @@
 <template>
+  <div>
   <div class="flex w-full items-center justify-between gap-x-4">
-    <div>
-      <UProgress v-if="isProcessing" animation="carousel" class="mb-2" />
+      <div class="flex-1 text-center px-4">
+        <UProgress v-if="isProcessing" animation="carousel" class="mb-3" />
       <p class="text-sm text-gray-500 dark:text-gray-400">
         {{ statusMessage || 'What do you want to do today?' }}
       </p>
@@ -21,6 +22,16 @@
       :ui="{ icon: { base: '!w-7 !h-7 sm:!w-8 sm:!h-8' } }"
       @click="toggleRecording"
     />
+  </div>
+
+    <UCard v-if="transcription" class="mt-4 bg-gray-50 dark:bg-gray-800">
+      <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+        <Icon name="i-heroicons-language" />
+        <span class="text-sm font-medium">Transcription</span>
+      </div>
+
+      <p class="text-sm mt-2">{{ transcription }}</p>
+    </UCard>
   </div>
 </template>
 
