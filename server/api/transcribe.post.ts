@@ -1,24 +1,30 @@
 export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event);
 
-  if (formData?.length) {
-    const fileData = formData[0];
-    console.log(fileData.name, fileData.filename, fileData.data.byteLength);
+  if (!formData?.length) {
+    throw createError({
+      statusCode: 400,
+      message: 'No audio data found.',
+    });
+  }
 
-    const input = {
-      audio: [...new Uint8Array(fileData.data)],
-    };
+  const fileData = formData[0];
+  const input = {
+    audio: [...new Uint8Array(fileData.data)],
+  };
 
+  try {
     const response = await hubAI().run('@cf/openai/whisper-tiny-en', input);
 
     console.dir(response, { depth: null });
-    // const response = await hubAI().run('@cf/openai/whisper', input);
 
-    return handleUserRequest(response.text as string);
+    return response.text;
+  } catch (error) {
+    console.error('Error transcribing:', error);
+
+    throw createError({
+      statusCode: 500,
+      message: 'Error transcribing.',
+    });
   }
-
-  return {
-    success: false,
-    response: null,
-  };
 });
