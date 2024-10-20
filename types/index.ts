@@ -34,5 +34,5 @@ export type ToDo = {
   text: string;
   completed: boolean;
   createdAt: string;
-  todoAt: string;
+  todoAt?: string;
 };
