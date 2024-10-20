@@ -9,14 +9,15 @@ export default defineEventHandler(async (event) => {
   const hashedPassword = await hashPassword(password);
 
   try {
+    const id = generateRandomId();
     await hubDatabase()
       .prepare(
         'INSERT INTO users (id, username, name, password) VALUES (?1, ?2, ?3, ?4)'
       )
-      .bind(generateRandomId(), username, name, hashedPassword)
+      .bind(id, username, name, hashedPassword)
       .run();
 
-    await setUserSession(event, { user: { username, name } });
+    await setUserSession(event, { user: { id, username, name } });
     return setResponseStatus(event, 201);
   } catch (error) {
     console.error('Error signing up:', error);

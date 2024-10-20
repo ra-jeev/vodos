@@ -31,6 +31,8 @@ export default defineEventHandler(async (event) => {
     throw invalidCredentialsError;
   }
 
-  await setUserSession(event, { user: { username, name: dbUser.name } });
+  await setUserSession(event, {
+    user: { id: dbUser.id, username, name: dbUser.name },
+  });
   return setResponseStatus(event, 201);
 });
