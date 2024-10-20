@@ -1,7 +1,7 @@
 import { addToDo } from '~~/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  // const { user } = await requireUserSession(event);
+  const { user } = await requireUserSession(event);
   const { text, todoAt } = await readBody(event);
 
   if (!text) {
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    return await addToDo(text, todoAtDate);
+    return await addToDo(user.id, text, todoAtDate);
   } catch (error) {
     console.error('Error adding todo:', error);
 
