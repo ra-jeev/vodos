@@ -3,11 +3,11 @@ export async function addToDo(text: string, todoAt?: Date) {
   let bindValues: string[];
 
   if (!todoAt) {
-    query = 'INSERT INTO todos (text) VALUES (?1)';
-    bindValues = [text];
+    query = 'INSERT INTO todos (userId, text) VALUES (?1, ?2)';
+    bindValues = [userId, text];
   } else {
-    query = 'INSERT INTO todos (text, todoAt) VALUES (?1, ?2)';
-    bindValues = [text, todoAt.toISOString()];
+    query = 'INSERT INTO todos (userId,text, todoAt) VALUES (?1, ?2, ?3)';
+    bindValues = [userId, text, todoAt.toISOString()];
   }
 
   const response = await hubDatabase()
