@@ -52,7 +52,7 @@ export function useChat(apiBase: string, body: Record<string, unknown>) {
 
             try {
               const jsonData = JSON.parse(data);
-              if (jsonData.response) {
+              if (jsonData.response && jsonData.response !== '<|im_end|>') {
                 yield jsonData.response;
               }
             } catch (parseError) {
