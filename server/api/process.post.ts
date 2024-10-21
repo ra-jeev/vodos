@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    event.node.res.setHeader('Content-Type', 'text/event-stream');
     return await handleUserMessage(user.id, text);
   } catch (error) {
     console.error('Error processing:', error);
