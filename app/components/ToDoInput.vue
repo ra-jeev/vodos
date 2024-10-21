@@ -32,5 +32,5 @@
 </template>
 
 <script setup lang="ts">
-const isVoiceMode = ref(false);
+const isVoiceMode = ref(true);
 </script>

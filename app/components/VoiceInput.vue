@@ -1,28 +1,29 @@
 <template>
   <div>
-  <div class="flex w-full items-center justify-between gap-x-4">
+    <div class="flex w-full items-center justify-between gap-x-4">
       <div class="flex-1 text-center px-4">
         <UProgress v-if="isProcessing" animation="carousel" class="mb-3" />
-      <p class="text-sm text-gray-500 dark:text-gray-400">
-        {{ statusMessage || 'What do you want to do today?' }}
-      </p>
-    </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          {{ statusMessage || 'What do you want to do today?' }}
+        </p>
+      </div>
 
-    <UButton
-      :class="[
-        'h-14 w-14 sm:h-16 sm:w-16 rounded-full transition-all duration-300 justify-center',
-        isRecording &&
-          'bg-red-500 hover:bg-red-600 dark:bg-red-400 dark:hover:bg-red-500',
-      ]"
-      :icon="
-        isRecording
-          ? 'i-heroicons-stop-16-solid'
-          : 'i-heroicons-microphone-16-solid'
-      "
-      :ui="{ icon: { base: '!w-7 !h-7 sm:!w-8 sm:!h-8' } }"
-      @click="toggleRecording"
-    />
-  </div>
+      <UButton
+        :class="[
+          'h-14 w-14 sm:h-16 sm:w-16 rounded-full transition-all duration-300 justify-center',
+          isRecording &&
+            'bg-red-500 hover:bg-red-600 dark:bg-red-400 dark:hover:bg-red-500',
+        ]"
+        :disabled="isProcessing"
+        :icon="
+          isRecording
+            ? 'i-heroicons-stop-16-solid'
+            : 'i-heroicons-microphone-16-solid'
+        "
+        :ui="{ icon: { base: '!w-7 !h-7 sm:!w-8 sm:!h-8' } }"
+        @click="toggleRecording"
+      />
+    </div>
 
     <UCard v-if="transcription" class="mt-4 bg-gray-50 dark:bg-gray-800">
       <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
@@ -31,6 +32,17 @@
       </div>
 
       <p class="text-sm mt-2">{{ transcription }}</p>
+    </UCard>
+    <UCard v-if="assistantResponse" class="mt-4 bg-gray-50 dark:bg-gray-800">
+      <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+        <Icon name="i-heroicons-megaphone-solid" />
+        <span class="text-sm font-medium">VoDos Bot</span>
+      </div>
+
+      <p class="text-sm mt-2">{{ assistantResponse }}</p>
+      <div class="flex justify-end space-x-2 mt-2">
+        <UButton size="xs" @click="assistantResponse = ''"> Ok </UButton>
+      </div>
     </UCard>
   </div>
 </template>
@@ -120,7 +132,23 @@ const transcribeAudio = async (blob: Blob) => {
   }
 };
 
-const processTranscription = () => {
-  // TODO
+const assistantResponse = ref('');
+const processTranscription = async () => {
+  try {
+    assistantResponse.value = '';
+    const response = useChat('/api/process', { text: transcription.value })();
+
+    for await (const chunk of response) {
+      assistantResponse.value += chunk;
+    }
+
+    statusMessage.value = '';
+  } catch (error) {
+    console.error('Error processing transcription:', error);
+    statusMessage.value = 'Error processing transcription';
+  } finally {
+    transcription.value = '';
+    isProcessing.value = false;
+  }
 };
 </script>
