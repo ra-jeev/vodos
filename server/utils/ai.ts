@@ -22,15 +22,16 @@ const handleCreateToDo = async (
     console.error('Error adding todo:', error);
   }
 
-  return ''
+  return '';
 };
 
 export async function handleUserMessage(userId: string, message: string) {
   const messages: { role: 'user' | 'system'; content: string }[] = [
     {
       role: 'system',
-      content:
-        "You are a helpful personal assistant who manages the Todo list of users. You can use the available tools to help you perform your duties. For add ToDo tasks you'll infer the ToDo that the user wants to add, and if any ToDo date that can be inferred from the user message.",
+      content: `You are a helpful personal assistant who manages the Todo lists of users. Use the available tools to help you perform your duties. For add ToDo tasks infer the ToDo and optionally the due date from user's message. FYI, Today's date is ${
+        new Date().toISOString().split('T')[0]
+      }`,
     },
     {
       role: 'user',
@@ -57,7 +58,7 @@ export async function handleUserMessage(userId: string, message: string) {
               todoAt: {
                 type: 'string',
                 description:
-                  '(Optional) The ude date of the ToDo. Format: YYYY-MM-DD',
+                  '(Optional) The due date of the ToDo. Format: YYYY-MM-DD.',
               },
             },
             required: ['todo'],
