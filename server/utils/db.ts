@@ -23,7 +23,7 @@ export async function getToDos(
   filters?: { dueDate?: Date; completed?: boolean }
 ) {
   let query = 'SELECT * FROM todos WHERE userId = ?1';
-  const params: string[] = [userId];
+  const params: (string | boolean)[] = [userId];
 
   if (filters?.dueDate) {
     query += ' AND todoAt = ?2';
@@ -32,7 +32,7 @@ export async function getToDos(
 
   if (typeof filters?.completed !== 'undefined') {
     query += ` AND completed = ?${params.length + 1}`;
-    params.push(filters.completed ? 'TRUE' : 'FALSE');
+    params.push(filters.completed);
   }
 
   const response = await hubDatabase()
