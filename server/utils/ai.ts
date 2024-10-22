@@ -19,6 +19,25 @@ const handleCreateToDo = async (
   return '';
 };
 
+const handleGetToDos = async (
+  userId: string,
+  dueDate?: string,
+  completed?: boolean
+) => {
+  try {
+    const todos = await getToDos(userId, {
+      dueDate: getDate(dueDate),
+      completed,
+    });
+
+    return JSON.stringify(todos);
+  } catch (error) {
+    console.error('Error getting todos:', error);
+  }
+
+  return '';
+};
+
 export async function handleUserMessage(userId: string, message: string) {
   const messages: { role: 'user' | 'system'; content: string }[] = [
     {
@@ -59,6 +78,27 @@ export async function handleUserMessage(userId: string, message: string) {
           },
           function: ({ todo, todoAt }) =>
             handleCreateToDo(userId, todo, todoAt),
+        },
+        {
+          name: 'getToDos',
+          description: 'Gets todos based on filters (if any)',
+          parameters: {
+            type: 'object',
+            properties: {
+              todoAt: {
+                type: 'string',
+                description:
+                  '(Optional) The due date of the ToDo. Format: YYYY-MM-DD.',
+              },
+              completed: {
+                type: 'boolean',
+                description: '(Optional) Whether the ToDo is completed or not.',
+              },
+            },
+            required: [],
+          },
+          function: ({ todoAt, completed }) =>
+            handleGetToDos(userId, todoAt, completed),
         },
       ],
     },
