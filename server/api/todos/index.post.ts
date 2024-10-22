@@ -1,5 +1,3 @@
-import { addToDo } from '~~/server/utils/db';
-
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const { text, todoAt } = await readBody(event);
@@ -11,15 +9,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  let todoAtDate: Date | undefined = undefined;
-  if (todoAt) {
-    todoAtDate = new Date(todoAt);
-    if (isNaN(todoAtDate.getTime())) {
-      throw createError({
-        statusCode: 400,
-        message: 'Invalid date for todoAt',
-      });
-    }
+  const todoAtDate = getDate(todoAt);
+  if (todoAt && !todoAtDate) {
+    throw createError({
+      statusCode: 400,
+      message: 'Invalid date for todoAt',
+    });
   }
 
   try {

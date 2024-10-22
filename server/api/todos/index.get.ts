@@ -3,13 +3,7 @@ export default defineEventHandler(async (event) => {
 
   const { completed, due_date: dueDate } = getQuery(event);
 
-  let todoAtDate: Date | undefined = undefined;
-  if (dueDate) {
-    todoAtDate = new Date(dueDate as string);
-    if (isNaN(todoAtDate.getTime())) {
-      todoAtDate = undefined;
-    }
-  }
+  const todoAtDate = getDate(dueDate as string | undefined);
 
   return await getToDos(user.id, {
     dueDate: todoAtDate,

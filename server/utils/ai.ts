@@ -6,13 +6,7 @@ const handleCreateToDo = async (
   todoAt?: string
 ) => {
   console.log('detected todo:', todo, 'time: ', todoAt);
-  let todoAtDate: Date | undefined = undefined;
-  if (todoAt) {
-    todoAtDate = new Date(todoAt);
-    if (isNaN(todoAtDate.getTime())) {
-      todoAtDate = undefined;
-    }
-  }
+  const todoAtDate = getDate(todoAt);
 
   try {
     await addToDo(userId, todo, todoAtDate);
